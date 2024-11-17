@@ -1,0 +1,44 @@
+model:
+  model: SimCLR
+  in_ch: 35
+  backbone: vit_b_16
+  out_dim: 128
+  dropout: False
+  hidden_layer_dims: [768, 768]
+  out_layer_dims:
+  act: 'ReLU'
+  use_proj: True
+
+train:
+  epochs: 10
+  batch_size: 512
+  lr: 0.001
+  lr_scheduler:
+  clip_grad:
+  
+loss:
+  method: 'simclr'
+  tau:
+    type: 'constant'
+    min_val: 0.1
+    max_val: 0.1
+
+data:
+  img_crop_path: '/scratch3/schaudhary/SenescenceProject2022/region_crops/img_crop'
+  mask_crop_path: '/scratch3/schaudhary/SenescenceProject2022/region_crops/mask_crop'
+  transforms: 'all_v3'
+  mask_cell: True
+  data_mode: 'patch'
+  data_size: 0
+  mode: 'train'
+  
+
+trainer:
+  model_name: 'simclr_exp_mlp_tau_e2_mean_cell'
+  ckpt_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/trained_models'
+  tensorboard_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/tensorboard'
+  embeddings_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/outputs/embeddings'
+  restore_ckpt: False
+  master_adata: '/home/schaudhary/mibi_segmentation/MIL_senescence/analysis/n2v_denoised_all_imgs_YXC_per_channel_batch_correction/mutiple_marker_in_immune_cells/adata.h5'
+  metrics: 'ImmTmrCTAccuracy'
+      

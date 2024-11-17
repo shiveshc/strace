@@ -1,0 +1,57 @@
+model:
+  model: Dino
+  in_ch: 35
+  backbone: vit_b_16
+  out_dim: 768
+  hidden_layer_dims: [768, 768]
+  out_layer_dims: 512
+  act: 'ReLU'
+  use_proj: True
+
+train:
+  epochs: 10
+  batch_size: 512
+  lr: 0.001
+  lr_scheduler:
+  clip_grad:
+
+loss:
+  method: 'Dino'
+  tps:
+    type: 'constant'
+    min_val: 0.1
+    max_val: 0.1
+  tpt:
+    type: 'linear'
+    min_val: 0.04
+    max_val: 0.07
+    max_steps: 3000
+  l:
+    type: 'cosine'
+    min_val: 0.99
+    max_val: 1
+  m:
+    type: 'constant'
+    min_val: 0.9
+    max_val: 0.9
+
+
+data:
+  img_crop_path: '/scratch3/schaudhary/SenescenceProject2022/region_crops/img_crop'
+  mask_crop_path: '/scratch3/schaudhary/SenescenceProject2022/region_crops/mask_crop'
+  transforms: 'all_v3'
+  mask_cell: True
+  data_mode: 'patch'
+  data_size: 0
+  mode: 'train'
+  
+
+trainer:
+  model_name: 'din_exp_vit_b_16_maskcell'
+  ckpt_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/trained_models'
+  tensorboard_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/tensorboard'
+  embeddings_dir: '/home/schaudhary/mibi_segmentation/Contrastive_Learning/outputs/embeddings'
+  restore_ckpt: False
+  master_adata: '/home/schaudhary/mibi_segmentation/MIL_senescence/analysis/n2v_denoised_all_imgs_YXC_per_channel_batch_correction/mutiple_marker_in_immune_cells/adata.h5'
+  metrics: 'ImmTmrCTAccuracy'
+      
